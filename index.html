@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Hunters Boerewors</title>
+</head>
+<body style="margin:0">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one narrow column, built to be opened from a WhatsApp link on a phone.
+   Header, order builder, basket with total, then the payment step. */
+:root {
+  --bg: #f1f3ef;
+  --surface: #fbfcfa;
+  --ink: #1b2620;
+  --muted: #5d6b63;
+  --line: #d5dad3;
+  --ember: #c9441c;
+  --ember-ink: #ffffff;
+  --ember-soft: #f8e3db;
+  --ok: #2f6b3f;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111613; --surface: #1a211d; --ink: #e8ede9; --muted: #9aa89f;
+    --line: #2d3731; --ember: #ef6a3f; --ember-ink: #1a0d07; --ember-soft: #3a2218; --ok: #6fc28a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111613; --surface: #1a211d; --ink: #e8ede9; --muted: #9aa89f;
+  --line: #2d3731; --ember: #ef6a3f; --ember-ink: #1a0d07; --ember-soft: #3a2218; --ok: #6fc28a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--font-body); }
+.wrap { max-width: 640px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header { display: flex; gap: 16px; align-items: center; margin-bottom: 20px; }
+header svg { flex: none; width: 64px; height: 64px; }
+h1 { font: 700 2rem/1.1 var(--font-display); margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); margin: 4px 0 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-bottom: 16px; }
+h2 { font: 600 1.15rem/1.2 var(--font-display); margin: 0 0 14px; }
+label, .lbl { display: block; font-size: .8rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.field { margin-bottom: 16px; }
+input[type=text] { width: 100%; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 11px 12px; }
+:focus-visible { outline: 3px solid var(--ember); outline-offset: 2px; }
+.stepper { display: inline-flex; align-items: stretch; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.stepper button { width: 48px; font: 600 1.4rem/1 var(--font-body); background: var(--bg); color: var(--ink); border: 0; cursor: pointer; }
+.stepper button:active { background: var(--ember-soft); }
+.stepper output { min-width: 96px; text-align: center; padding: 10px 8px; font-weight: 600; font-variant-numeric: tabular-nums; border-inline: 1px solid var(--line); background: var(--surface); }
+.seg { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { margin: 0; text-transform: none; letter-spacing: 0; font-size: .95rem; font-weight: 500; color: var(--ink);
+  border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; cursor: pointer; background: var(--bg); }
+.seg label small { display: block; color: var(--muted); font-weight: 400; font-size: .8rem; }
+.seg input:checked + label { border-color: var(--ember); background: var(--ember-soft); box-shadow: inset 0 0 0 1px var(--ember); }
+.seg input:focus-visible + label { outline: 3px solid var(--ember); outline-offset: 2px; }
+.check { display: flex; gap: 10px; align-items: flex-start; text-transform: none; letter-spacing: 0; font-size: .95rem; font-weight: 500; color: var(--ink); cursor: pointer; margin: 0; }
+.check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--ember); flex: none; }
+.hint { color: var(--muted); font-size: .85rem; margin: 6px 0 0; }
+.primary { font: 600 1rem var(--font-body); background: var(--ember); color: var(--ember-ink); border: 0; border-radius: 8px; padding: 13px 18px; cursor: pointer; width: 100%; text-align: center; text-decoration: none; display: block; }
+.primary[aria-disabled=true], .primary:disabled, .ghost[aria-disabled=true] { opacity: .45; cursor: not-allowed; }
+.ghost { font: 600 1rem var(--font-body); background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 12px 18px; cursor: pointer; width: 100%; text-align: center; text-decoration: none; display: block; }
+.lines { list-style: none; margin: 0 0 14px; padding: 0; }
+.lines li { display: flex; gap: 12px; justify-content: space-between; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.lines li:first-child { padding-top: 0; }
+.lines .what { min-width: 0; }
+.lines .what b { display: block; }
+.lines .what span { color: var(--muted); font-size: .88rem; }
+.lines .right { text-align: right; flex: none; }
+.lines .price { font-weight: 600; font-variant-numeric: tabular-nums; }
+.rm { background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; font: inherit; font-size: .82rem; padding: 4px 0 0; }
+.empty { color: var(--muted); margin: 0 0 14px; }
+.total { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 16px; font-variant-numeric: tabular-nums; }
+.total small { font: 400 .85rem var(--font-body); color: var(--muted); }
+.actions { display: grid; gap: 10px; }
+.note { font-size: .85rem; color: var(--muted); margin: 14px 0 0; }
+.step { display: none; }
+.step.show { display: block; background: var(--ember-soft); border-radius: 8px; padding: 12px 14px; margin-top: 12px; font-size: .92rem; }
+.toast { color: var(--ok); font-weight: 600; font-size: .9rem; min-height: 1.3em; margin: 8px 0 0; }
+.info { font-size: .85rem; color: var(--muted); }
+.info p { margin: 0 0 8px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <svg id="coil" viewBox="0 0 64 64" role="img" aria-label="Coiled boerewors"></svg>
+    <div>
+      <h1>Hunters Boerewors</h1>
+      <p class="sub" id="closing">Choose your quantity, thin or thick, then pay by bank link.</p>
+    </div>
+  </header>
+
+  <section class="card" aria-labelledby="build">
+    <h2 id="build">Add wors to your order</h2>
+
+    <div class="field">
+      <span class="lbl" id="kglbl">Quantity (kilos)</span>
+      <div class="stepper" role="group" aria-labelledby="kglbl">
+        <button type="button" id="kgminus" aria-label="Half a kilo less">−</button>
+        <output id="kgout" aria-live="polite">1 kg</output>
+        <button type="button" id="kgplus" aria-label="Half a kilo more">+</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="lbl">Thin or thick</span>
+      <div class="seg" role="radiogroup" aria-label="Thin or thick">
+        <input type="radio" name="casing" id="c-thin" value="thin" checked><label for="c-thin">Thin<small>Sheep casing, about 25 mm</small></label>
+        <input type="radio" name="casing" id="c-thick" value="thick"><label for="c-thick">Thick<small>Hog casing, about 35 mm</small></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="lbl">Flavour</span>
+      <div class="seg" role="radiogroup" aria-label="Flavour">
+        <input type="radio" name="flavour" id="f-orig" value="original" checked><label for="f-orig">Original boerewors<small>The Vleisland recipe</small></label>
+        <input type="radio" name="flavour" id="f-cheese" value="cheese"><label for="f-cheese">Cheese wors<small>With diced cheese</small></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="lbl">Fat</span>
+      <div class="seg" role="radiogroup" aria-label="Fat">
+        <input type="radio" name="fat" id="fat-pork" value="pork" checked><label for="fat-pork">Pork fat<small>Milder, the classic choice</small></label>
+        <input type="radio" name="fat" id="fat-lamb" value="lamb"><label for="fat-lamb">Lamb fat<small>Stronger, more traditional</small></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="check" for="gf"><input type="checkbox" id="gf"><span>Gluten free<span class="hint" style="display:block">Made without Worcestershire sauce, at the same price.<span id="gfprice"></span></span></span></label>
+    </div>
+
+    <button type="button" class="primary" id="add">Add to my order</button>
+  </section>
+
+  <section class="card" aria-labelledby="mine">
+    <h2 id="mine">Your order</h2>
+    <div class="field">
+      <label for="who">Your name</label>
+      <input type="text" id="who" autocomplete="name" placeholder="So the organiser can tick you off">
+    </div>
+    <div class="field">
+      <label for="mob">Mobile number (optional)</label>
+      <input type="text" id="mob" inputmode="tel" autocomplete="tel" placeholder="So we can confirm your order">
+    </div>
+    <div class="field">
+      <label for="mail">Email (optional)</label>
+      <input type="text" id="mail" inputmode="email" autocomplete="email" placeholder="For your order confirmation">
+    </div>
+    <p class="empty" id="empty">Nothing added yet.</p>
+    <ul class="lines" id="lines"></ul>
+    <div class="total"><span>Total</span><span id="total">£0.00</span></div>
+
+    <div class="actions">
+      <a class="primary" id="pay" href="#" target="_blank" rel="noopener" aria-disabled="true">Pay by bank link</a>
+      <a class="ghost" id="wa" href="#" target="_blank" rel="noopener" hidden>Send my order on WhatsApp</a>
+    </div>
+    <div class="step" id="after">After you pay, send your order on WhatsApp so it gets counted. You will get a confirmation once your payment arrives.</div>
+    <p class="toast" id="toast" role="status"></p>
+    <p class="note" id="paynote"></p>
+  </section>
+
+  <section class="card" aria-labelledby="ing">
+    <h2 id="ing">What is in it</h2>
+    <p style="margin:0 0 10px"><b>Original:</b> beef, your choice of pork or lamb fat, salt, black pepper, cloves, nutmeg, roasted coriander, Worcestershire sauce and water, in a natural casing.</p>
+    <p style="margin:0 0 10px"><b>Cheese wors:</b> the same, plus diced cheese.</p>
+    <p style="margin:0 0 10px"><b>Gluten free:</b> the same, with the Worcestershire sauce replaced by vinegar.</p>
+    <p style="margin:0 0 10px"><b>Fat content:</b> 30%, from the pork or lamb fat you choose.</p>
+    <p style="margin:0" class="hint"><b>Allergens:</b> the Worcestershire sauce contains fish (anchovy) and gluten (barley malt vinegar). Cheese wors contains milk.</p>
+  </section>
+
+  <section class="info">
+    <p>Thin wors uses sheep casing and cooks fast. Thick uses hog casing and suits the braai.</p>
+    <p id="contactline">Questions, or want something different? <a id="contact" href="#" target="_blank" rel="noopener" style="color:var(--ember)">Get in touch on WhatsApp</a>.</p>
+    <p>Cheese wors contains milk. Gluten free wors is made without Worcestershire sauce.</p>
+  </section>
+</div>
+
+<script>
+/* ORGANISER SETTINGS: change these, then republish.
+   Prices: £10 per kg, cheese wors +£2 per kg, gluten free at the same price. */
+var CONFIG = {
+  monzoUser: "juliusdejager",            // your monzo.me username, for example "jane" for monzo.me/jane
+  whatsappNumber: "447776452457",       // optional, international digits only, for example 447700900123
+  closingText: "",          // optional, for example "Orders close Sunday 6pm"
+  pricePerKg: { thin: 10, thick: 10 },
+  cheeseExtraPerKg: 2.0,
+  glutenFreeExtraPerKg: 0,
+  minKg: 0.5, maxKg: 20, stepKg: 0.5
+};
+
+var $ = function (id) { return document.getElementById(id); };
+var state = { kg: 1, lines: [] };
+var gbp = function (n) { return "£" + n.toFixed(2); };
+var kgText = function (n) { return (Math.round(n * 10) / 10) + " kg"; };
+
+function perKg(l) {
+  return CONFIG.pricePerKg[l.casing] + (l.flavour === "cheese" ? CONFIG.cheeseExtraPerKg : 0) + (l.gf ? CONFIG.glutenFreeExtraPerKg : 0);
+}
+function linePrice(l) { return Math.round(l.kg * perKg(l) * 100) / 100; }
+function orderTotal() { return Math.round(state.lines.reduce(function (s, l) { return s + linePrice(l); }, 0) * 100) / 100; }
+function describe(l) {
+  return [l.casing === "thin" ? "Thin" : "Thick", l.flavour === "cheese" ? "Cheese wors" : "Original",
+    l.gf ? "Gluten free" : null, (l.fat === "lamb" ? "Lamb" : "Pork") + " fat"].filter(Boolean).join(" · ");
+}
+function summary() {
+  var name = $("who").value.trim();
+  var rows = state.lines.map(function (l) { return "- " + kgText(l.kg) + ": " + describe(l) + " (" + gbp(linePrice(l)) + ")"; });
+  var mob = $("mob").value.trim(), mail = $("mail").value.trim();
+  var contact = (mob ? "\nMobile: " + mob : "") + (mail ? "\nEmail: " + mail : "");
+  return "Wors order for " + (name || "(name)") + "\n" + rows.join("\n") + "\nTotal: " + gbp(orderTotal()) + contact;
+}
+function monzoLink() {
+  var name = $("who").value.trim();
+  return "https://monzo.me/" + encodeURIComponent(CONFIG.monzoUser) + "/" + orderTotal().toFixed(2) + "?d=" + encodeURIComponent("Wors " + name);
+}
+
+function save() { try { localStorage.setItem("wors-order", JSON.stringify({ lines: state.lines, who: $("who").value, mob: $("mob").value, mail: $("mail").value })); } catch (e) {} }
+function load() {
+  try {
+    var d = JSON.parse(localStorage.getItem("wors-order") || "null");
+    if (d && Array.isArray(d.lines)) { state.lines = d.lines.filter(function (l) { return l && l.kg > 0 && CONFIG.pricePerKg[l.casing]; }); $("who").value = d.who || ""; $("mob").value = d.mob || ""; $("mail").value = d.mail || ""; }
+  } catch (e) {}
+}
+
+function render() {
+  $("kgout").textContent = kgText(state.kg);
+  $("kgminus").disabled = state.kg <= CONFIG.minKg;
+  $("kgplus").disabled = state.kg >= CONFIG.maxKg;
+  var ul = $("lines"); ul.textContent = "";
+  state.lines.forEach(function (l, i) {
+    var li = document.createElement("li");
+    var what = document.createElement("div"); what.className = "what";
+    var b = document.createElement("b"); b.textContent = kgText(l.kg);
+    var s = document.createElement("span"); s.textContent = describe(l);
+    what.appendChild(b); what.appendChild(s);
+    var right = document.createElement("div"); right.className = "right";
+    var p = document.createElement("div"); p.className = "price"; p.textContent = gbp(linePrice(l));
+    var rm = document.createElement("button"); rm.type = "button"; rm.className = "rm"; rm.textContent = "Remove";
+    rm.setAttribute("aria-label", "Remove " + kgText(l.kg) + " " + describe(l));
+    rm.addEventListener("click", function () { state.lines.splice(i, 1); save(); render(); });
+    right.appendChild(p); right.appendChild(rm);
+    li.appendChild(what); li.appendChild(right); ul.appendChild(li);
+  });
+  $("empty").hidden = state.lines.length > 0;
+  $("total").textContent = gbp(orderTotal());
+
+  var hasName = $("who").value.trim().length > 0, has = state.lines.length > 0, ready = hasName && has;
+  var pay = $("pay"), note = $("paynote");
+  var configured = CONFIG.monzoUser.trim().length > 0;
+  if (ready && configured) {
+    pay.href = monzoLink(); pay.setAttribute("aria-disabled", "false"); pay.textContent = "Pay " + gbp(orderTotal()) + " by bank link";
+    note.textContent = "Opens a secure payment page with the amount filled in.";
+  } else {
+    pay.removeAttribute("href"); pay.setAttribute("aria-disabled", "true"); pay.textContent = "Pay by bank link";
+    note.textContent = !configured ? "The payment link is not switched on yet. Ask the organiser." : (!has ? "Add some wors to enable payment." : "Enter your name to enable payment.");
+  }
+  var wa = $("wa");
+  if (CONFIG.whatsappNumber) { wa.hidden = false; wa.href = ready ? "https://wa.me/" + CONFIG.whatsappNumber + "?text=" + encodeURIComponent(summary()) : "#"; wa.setAttribute("aria-disabled", String(!ready)); }
+}
+
+$("kgminus").addEventListener("click", function () { state.kg = Math.max(CONFIG.minKg, Math.round((state.kg - CONFIG.stepKg) * 10) / 10); render(); });
+$("kgplus").addEventListener("click", function () { state.kg = Math.min(CONFIG.maxKg, Math.round((state.kg + CONFIG.stepKg) * 10) / 10); render(); });
+$("add").addEventListener("click", function () {
+  state.lines.push({
+    kg: state.kg,
+    casing: document.querySelector("input[name=casing]:checked").value,
+    flavour: document.querySelector("input[name=flavour]:checked").value,
+    fat: document.querySelector("input[name=fat]:checked").value,
+    gf: $("gf").checked
+  });
+  $("toast").textContent = "Added to your order.";
+  save(); render();
+});
+["who", "mob", "mail"].forEach(function (id) { $(id).addEventListener("input", function () { save(); render(); }); });
+$("pay").addEventListener("click", function (e) {
+  if ($("pay").getAttribute("aria-disabled") === "true") { e.preventDefault(); return; }
+  $("after").classList.add("show");
+});
+$("wa").addEventListener("click", function (e) { if ($("wa").getAttribute("aria-disabled") === "true") e.preventDefault(); });
+
+$("gfprice").textContent = CONFIG.glutenFreeExtraPerKg > 0 ? "Adds " + gbp(CONFIG.glutenFreeExtraPerKg) + " per kg." : "";
+$("f-cheese").nextElementSibling.querySelector("small").textContent = "With diced cheese" + (CONFIG.cheeseExtraPerKg > 0 ? " (+" + gbp(CONFIG.cheeseExtraPerKg) + "/kg)" : "");
+if (CONFIG.closingText) $("closing").textContent = CONFIG.closingText + ". Choose your quantity, then pay by bank link.";
+if (CONFIG.whatsappNumber) $("contact").href = "https://wa.me/" + CONFIG.whatsappNumber; else $("contactline").hidden = true;
+
+(function coil() {
+  var pts = [], turns = 3.2, cx = 32, cy = 32, steps = 120;
+  for (var i = 0; i <= steps; i++) {
+    var a = (i / steps) * turns * 2 * Math.PI, r = 4 + (i / steps) * 24;
+    pts.push((i ? "L" : "M") + (cx + r * Math.cos(a)).toFixed(1) + " " + (cy + r * Math.sin(a)).toFixed(1));
+  }
+  var ns = "http://www.w3.org/2000/svg", p = document.createElementNS(ns, "path");
+  p.setAttribute("d", pts.join(" ")); p.setAttribute("fill", "none"); p.setAttribute("stroke", "var(--ember)");
+  p.setAttribute("stroke-width", "5"); p.setAttribute("stroke-linecap", "round"); p.setAttribute("stroke-linejoin", "round");
+  $("coil").appendChild(p);
+})();
+
+load(); render();
+</script>
+</body>
+</html>
