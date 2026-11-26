@@ -142,9 +142,7 @@ input[type=text] { width: 100%; font: inherit; color: var(--ink); background: va
       </div>
     </div>
 
-    <div class="field">
-      <label class="check" for="gf"><input type="checkbox" id="gf"><span>Gluten free<span class="hint" style="display:block">Made without Worcestershire sauce, at the same price.<span id="gfprice"></span></span></span></label>
-    </div>
+    <p class="hint" style="margin:0 0 14px"><b>All our boerewors is gluten free.</b></p>
 
     <button type="button" class="primary" id="add">Add to my order</button>
   </section>
@@ -178,17 +176,16 @@ input[type=text] { width: 100%; font: inherit; color: var(--ink); background: va
 
   <section class="card" aria-labelledby="ing">
     <h2 id="ing">What is in it</h2>
-    <p style="margin:0 0 10px"><b>Original:</b> beef, your choice of pork or lamb fat, salt, black pepper, cloves, nutmeg, roasted coriander, Worcestershire sauce and water, in a natural casing.</p>
+    <p style="margin:0 0 10px"><b>Original:</b> beef, your choice of pork or lamb fat, salt, black pepper, cloves, nutmeg, roasted coriander, gluten free Worcestershire sauce and water, in a natural casing.</p>
     <p style="margin:0 0 10px"><b>Cheese wors:</b> the same, plus diced cheese.</p>
-    <p style="margin:0 0 10px"><b>Gluten free:</b> the same, with the Worcestershire sauce replaced by vinegar.</p>
     <p style="margin:0 0 10px"><b>Fat content:</b> 30%, from the pork or lamb fat you choose.</p>
-    <p style="margin:0" class="hint"><b>Allergens:</b> the Worcestershire sauce contains fish (anchovy) and gluten (barley malt vinegar). Cheese wors contains milk.</p>
+    <p style="margin:0" class="hint"><b>Allergens:</b> cheese wors contains milk. <span style="font-size:.85em">All our boerewors is gluten free. We use gluten free Worcestershire sauce.</span></p>
   </section>
 
   <section class="info">
     <p>Thin wors uses sheep casing and cooks fast. Thick uses hog casing and suits the braai.</p>
     <p id="contactline">Questions, or want something different? <a id="contact" href="#" target="_blank" rel="noopener" style="color:var(--ember)">Get in touch on WhatsApp</a>.</p>
-    <p>Cheese wors contains milk. Gluten free wors is made without Worcestershire sauce.</p>
+    <p>Cheese wors contains milk.</p>
   </section>
 </div>
 
@@ -283,7 +280,7 @@ $("add").addEventListener("click", function () {
     casing: document.querySelector("input[name=casing]:checked").value,
     flavour: document.querySelector("input[name=flavour]:checked").value,
     fat: document.querySelector("input[name=fat]:checked").value,
-    gf: $("gf").checked
+    gf: false
   });
   $("toast").textContent = "Added to your order.";
   save(); render();
@@ -295,7 +292,6 @@ $("pay").addEventListener("click", function (e) {
 });
 $("wa").addEventListener("click", function (e) { if ($("wa").getAttribute("aria-disabled") === "true") e.preventDefault(); });
 
-$("gfprice").textContent = CONFIG.glutenFreeExtraPerKg > 0 ? "Adds " + gbp(CONFIG.glutenFreeExtraPerKg) + " per kg." : "";
 $("f-cheese").nextElementSibling.querySelector("small").textContent = "With diced cheese" + (CONFIG.cheeseExtraPerKg > 0 ? " (+" + gbp(CONFIG.cheeseExtraPerKg) + "/kg)" : "");
 if (CONFIG.closingText) $("closing").textContent = CONFIG.closingText + ". Choose your quantity, then pay by bank link.";
 if (CONFIG.whatsappNumber) $("contact").href = "https://wa.me/" + CONFIG.whatsappNumber; else $("contactline").hidden = true;
