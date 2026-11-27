@@ -95,6 +95,7 @@ input[type=text] { width: 100%; font: inherit; color: var(--ink); background: va
 .kicker { display: flex; gap: 10px; align-items: center; font: 700 .85rem var(--font-display); letter-spacing: .18em; text-transform: uppercase; color: var(--hot); margin: 0 0 14px; }
 .kicker svg { width: 34px; height: 34px; flex: none; }
 .hero h1 span { color: var(--ember); display: block; }
+.hero .tag { font: 800 1.5rem/1.1 var(--font-display); text-transform: uppercase; letter-spacing: .04em; color: var(--hot); margin: 12px 0 0; }
 .hero .sub { font-size: 1.05rem; margin: 14px 0 18px; max-width: 34ch; color: var(--ink); opacity: .8; }
 .strip { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
 .strip span { font: 700 1.15rem var(--font-display); letter-spacing: .06em; text-transform: uppercase; background: var(--hot); color: #14100c; padding: 6px 12px; border-radius: 3px; }
@@ -121,7 +122,8 @@ input[type=text] { width: 100%; font: inherit; color: var(--ink); background: va
 <div class="wrap">
   <header class="hero">
     <p class="kicker"><svg id="coil" viewBox="0 0 64 64" role="img" aria-label="Coiled boerewors"></svg>Home-made &middot; Gluten free &middot; By the kilo</p>
-    <h1>Proper wors.<span>Made by hunters.</span></h1>
+    <h1>Hunters<span>Boerewors</span></h1>
+    <p class="tag">Proper wors. Made by hunters.</p>
     <p class="sub" id="closing">Pick your kilos, thin or thick, then pay by bank link.</p>
     <img class="hero-img" src="img/smoke.jpg" width="498" height="616" alt="A coil of boerewors on the braai, smoking, being turned with tongs">
     <div class="strip"><span id="pricemain">Boerewors &pound;10/kg</span><span class="alt" id="pricecheese">Cheese wors +&pound;2/kg</span></div>
