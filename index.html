@@ -107,6 +107,10 @@ input[type=text] { width: 100%; font: inherit; color: var(--ink); background: va
 .seg input:checked + label { background: var(--ember); color: var(--ember-ink); }
 .seg input:checked + label small { color: var(--ember-ink); opacity: .8; }
 .lbl { font-family: var(--font-display); font-size: .95rem; letter-spacing: .12em; }
+.hero-img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 3px; border: 1px solid var(--line); margin: 0 0 16px; }
+.gallery { margin: 24px 0 16px; }
+.gal { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.gal img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3px; border: 1px solid var(--line); }
 </style>
 
 <div class="wrap">
@@ -114,6 +118,7 @@ input[type=text] { width: 100%; font: inherit; color: var(--ink); background: va
     <p class="kicker"><svg id="coil" viewBox="0 0 64 64" role="img" aria-label="Coiled boerewors"></svg>Home-made &middot; Gluten free &middot; By the kilo</p>
     <h1>Proper wors.<span>Made by hunters.</span></h1>
     <p class="sub" id="closing">Pick your kilos, thin or thick, then pay by bank link.</p>
+    <img class="hero-img" src="img/grill.jpg" width="640" height="640" alt="Two coils of boerewors over glowing coals">
     <div class="strip"><span id="pricemain">Boerewors &pound;10/kg</span><span class="alt" id="pricecheese">Cheese wors +&pound;2/kg</span></div>
     <ul class="facts">
       <li><b>01</b><span><strong>Gluten free.</strong> <em>Every order, same price.</em></span></li>
@@ -189,6 +194,14 @@ input[type=text] { width: 100%; font: inherit; color: var(--ink); background: va
     <div class="step" id="after">After you pay, send your order on WhatsApp so it gets counted. You will get a confirmation once your payment arrives.</div>
     <p class="toast" id="toast" role="status"></p>
     <p class="note" id="paynote"></p>
+  </section>
+
+  <section class="gallery" aria-label="From our kitchen">
+    <h2>From our kitchen</h2>
+    <div class="gal">
+      <img src="img/raw-boxes.jpg" width="800" height="1067" loading="lazy" alt="Fresh boerewors coiled in two tubs, ready to freeze">
+      <img src="img/raw-table.jpg" width="800" height="1067" loading="lazy" alt="A big coil of fresh boerewors in natural casing">
+    </div>
   </section>
 
   <section class="card" aria-labelledby="ing">
