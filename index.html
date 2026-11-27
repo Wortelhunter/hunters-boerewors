@@ -117,6 +117,14 @@ input[type=text] { width: 100%; font: inherit; color: var(--ink); background: va
 .reelbox iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .reels { display: grid; gap: 16px; }
 .reel .hint { text-align: center; }
+.rollwrap { margin: 26px 0 8px; }
+.roll { overflow: hidden; margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))); -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.track { display: flex; gap: 10px; width: max-content; animation: rollright 46s linear infinite; }
+.track .dup { display: contents; }
+.track img { height: 230px; width: auto; border-radius: 3px; border: 1px solid var(--line); flex: none; user-select: none; -webkit-user-drag: none; }
+.roll:hover .track, .roll:active .track { animation-play-state: paused; }
+@keyframes rollright { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .roll { overflow-x: auto; } .track { animation: none; } .track .dup { display: none; } }
 </style>
 
 <div class="wrap">
@@ -201,6 +209,11 @@ input[type=text] { width: 100%; font: inherit; color: var(--ink); background: va
     <div class="step" id="after">After you pay, send your order on WhatsApp so it gets counted. You will get a confirmation once your payment arrives.</div>
     <p class="toast" id="toast" role="status"></p>
     <p class="note" id="paynote"></p>
+  </section>
+
+  <section class="rollwrap" aria-label="Customer photos">
+    <h2>Customer photos</h2>
+    <div class="roll"><div class="track"><img src="img/reel/napoleon.jpg" width="420" height="560" alt="Boerewors on the braai" loading="lazy" draggable="false"><img src="img/reel/onions.jpg" width="420" height="560" alt="Coils on the grill with onions" loading="lazy" draggable="false"><img src="img/reel/pot.jpg" width="420" height="560" alt="Boerewors in a pot with pap" loading="lazy" draggable="false"><img src="img/reel/bowl.jpg" width="420" height="560" alt="Boerewors with tomato sauce and pap" loading="lazy" draggable="false"><img src="img/reel/bread.jpg" width="420" height="560" alt="Boerewors with fresh bread" loading="lazy" draggable="false"><img src="img/reel/steak.jpg" width="746" height="560" alt="Boerewors rolls beside sliced steak" loading="lazy" draggable="false"><img src="img/reel/plate.jpg" width="420" height="560" alt="Boerewors with chicken and salad" loading="lazy" draggable="false"><img src="img/reel/bags.jpg" width="420" height="560" alt="Bags of boerewors ready to go" loading="lazy" draggable="false"><span class="dup" aria-hidden="true"><img src="img/reel/napoleon.jpg" width="420" height="560" alt="" loading="lazy" draggable="false"><img src="img/reel/onions.jpg" width="420" height="560" alt="" loading="lazy" draggable="false"><img src="img/reel/pot.jpg" width="420" height="560" alt="" loading="lazy" draggable="false"><img src="img/reel/bowl.jpg" width="420" height="560" alt="" loading="lazy" draggable="false"><img src="img/reel/bread.jpg" width="420" height="560" alt="" loading="lazy" draggable="false"><img src="img/reel/steak.jpg" width="746" height="560" alt="" loading="lazy" draggable="false"><img src="img/reel/plate.jpg" width="420" height="560" alt="" loading="lazy" draggable="false"><img src="img/reel/bags.jpg" width="420" height="560" alt="" loading="lazy" draggable="false"></span></div></div>
   </section>
 
   <section class="reel" aria-label="Watch">
